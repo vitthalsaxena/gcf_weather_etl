@@ -17,10 +17,19 @@ exports.readObservation = (file, context) => {
     .pipe(csv())
     .on('data',(row)=>{
         //Log data
-        console.log(row);
+        //console.log(row);
+        printData(row);
     })
     .on('end',()=>{
         //EOF
         console.log("End of File!");
     })
+}
+
+// Helper function
+
+function printData(row){
+    for(let key in row){
+        console.log(key+":"+row[key]);
+    }
 }
