@@ -7,7 +7,7 @@ This Cloud Function will respond to a new document in a GCP Storage bucket and w
 1. Create a Cloud Storage bucket (in the example below, my bucket is `sp24_elliott_41200_weather_dev`)
 2. Create a new directory in Cloud Shell
 3. Initialize a new npm module
-4. `touch index.js .gitignore`
+4. `touch index.js .gitignore README.md`
 5. Add `node_modules` to .gitignore
 6. Add code to log the basic data about the file on function execution
 7. Deploy the function:
