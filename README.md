@@ -20,6 +20,14 @@ gcloud functions deploy weather_etl \
 --trigger-resource sp24_elliott_41200_weather_dev
 ```
 
+### Copying a File to the Cloud Storage Bucket
+
+This repository includes a CSV file that you can use to test your Cloud Function. To copy the file to the Cloud Storage bucket, run the following command **and substitute your bucket name!**
+
+```
+gsutil cp 724380-93819_sample.csv gs://sp24_elliott_41200_weather_dev
+```
+
 ## v2: Read the contents of the file when it is loaded to GCS
 
 1. Install `@google-cloud/storage` and `csv-parser`
