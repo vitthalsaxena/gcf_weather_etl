@@ -20,6 +20,7 @@ exports.readObservation = (file, context) => {
         //console.log(row);
         modifyData(file,row);
         printData(row);
+        writetobq(row);
     })
     .on('end',()=>{
         //EOF
@@ -51,4 +52,28 @@ function modifyData(file,row){
             }
         }
     }
+}
+
+//Loading into BigQuery for test on demo file
+const {BigQuery}=require('@google-cloud/bigquery');
+
+const bq=new BigQuery();
+const datasetId='weather_etl';
+const tableId='Demo';
+
+//create a helper function that writes to bigquery
+async function writetobq(obj){
+    //BQ expects an array of objects
+    var data=[];
+    data.push(obj);
+    
+    //insert the array into the table
+    await bq
+    .dataset(datasetId)
+    .table(tableId)
+    .insert(data)
+    .then(()=>{
+        data.forEach((val)=>{console.log(`Insterted: ${val}`)})
+    })
+    .catch((err)=>{console.error(`Error: ${err}`)})
 }
