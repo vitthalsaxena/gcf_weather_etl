@@ -18,6 +18,7 @@ exports.readObservation = (file, context) => {
     .on('data',(row)=>{
         //Log data
         //console.log(row);
+        modifyData(file,row);
         printData(row);
     })
     .on('end',()=>{
@@ -31,5 +32,23 @@ exports.readObservation = (file, context) => {
 function printData(row){
     for(let key in row){
         console.log(key+":"+row[key]);
+    }
+}
+
+//Modifying data
+
+function modifyData(file,row){
+    for(let key in row){
+        if(row=="station"){
+            row[key]=file.name;
+        }
+        if(row[key]==-9999){
+            row[key]=null;
+        }
+        if(row=="airtemp" || row=="dewpoint" || row=="pressure" || row=="windspeed" || row=="precip1hour" || row=="precip6hour"){
+            if(row[key]!=null){
+                row[key]=row[key]*10;
+            }
+        }
     }
 }
