@@ -1,5 +1,11 @@
 const {Storage}=require('@google-cloud/storage');
 const csv=require('csv-parser');
+const {BigQuery}=require('@google-cloud/bigquery');
+
+//Loading into BigQuery for test on demo file
+const bq=new BigQuery();
+const datasetId='weather_etl';
+const tableId='assignment3';
 
 exports.readObservation = (file, context) => {
 //     console.log(`  Event: ${context.eventId}`);
@@ -25,9 +31,9 @@ exports.readObservation = (file, context) => {
     .on('end',()=>{
         //EOF
         console.log("End of File!");
+        
     })
 }
-
 // Helper function
 
 function printData(row){
@@ -40,33 +46,26 @@ function printData(row){
 
 function modifyData(file,row){
     for(let key in row){
-        if(row=="station"){
+        if(key=="station"){
             row[key]=file.name;
         }
         if(row[key]==-9999){
             row[key]=null;
         }
-        if(row=="airtemp" || row=="dewpoint" || row=="pressure" || row=="windspeed" || row=="precip1hour" || row=="precip6hour"){
+        if(key=="airtemp" || key=="dewpoint" || key=="pressure" || key=="windspeed" || key=="precip1hour" || key=="precip6hour"){
             if(row[key]!=null){
-                row[key]=row[key]*10;
+                row[key]=row[key]/10;
             }
         }
     }
 }
-
-//Loading into BigQuery for test on demo file
-const {BigQuery}=require('@google-cloud/bigquery');
-
-const bq=new BigQuery();
-const datasetId='weather_etl';
-const tableId='Demo';
 
 //create a helper function that writes to bigquery
 async function writetobq(obj){
     //BQ expects an array of objects
     var data=[];
     data.push(obj);
-    
+
     //insert the array into the table
     await bq
     .dataset(datasetId)
