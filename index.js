@@ -16,22 +16,21 @@ exports.readObservation = (file, context) => {
     const gcs=new Storage();
     const dataFile=gcs.bucket(file.bucket).file(file.name);
     dataFile.createReadStream()
-    .on('error',()=>{
+    .on('error',(err)=>{
         //Error Handling
-        console.error(error);
+        console.error(err);
     })
     .pipe(csv())
-    .on('data',(row)=>{
+    .on('data',async (row)=>{
         //Log data
         //console.log(row);
         modifyData(file,row);
         printData(row);
-        writetobq(row);
+        await writetobq(row);
     })
     .on('end',()=>{
         //EOF
         console.log("End of File!");
-        
     })
 }
 // Helper function
@@ -47,7 +46,7 @@ function printData(row){
 function modifyData(file,row){
     for(let key in row){
         if(key=="station"){
-            row[key]=file.name;
+            row[key]=file.name.replace(/\..*$/, "");
         }
         if(row[key]==-9999){
             row[key]=null;
